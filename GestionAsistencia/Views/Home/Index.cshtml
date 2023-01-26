@@ -1,0 +1,159 @@
+﻿@using Common.Utils.Enums
+@using Microsoft.AspNetCore.Identity
+@using static Common.Utils.Constant.Const
+
+@{
+    var idTypeUser = User.Claims.FirstOrDefault(x => x.Type == TypeClaims.IdTypeUser).Value;
+    bool isInstructor = idTypeUser == Convert.ToInt32(Enums.TypeUser.Instructor).ToString();
+}
+
+<input id="txtValorEstudiante" value=@isInstructor.ToString() hidden />
+
+<div class="text-center">
+    <h1 class="display-4">Sistema de Gestión de Asistencia Sena</h1>
+    <p>Hola, acá podrá gestionar las excusas, y validar asistencias.</p>
+</div>
+<br />
+@if (!isInstructor)
+{
+<div class="text-center">
+    <h2 > Detalle de Inasistencias</h2>   
+</div>
+<br />
+
+    <div class="row">
+        <div class="col-md-12">
+                    <table id="tblDetalleAsistenciaUser" class="table" style="width:100% !important">
+                        <thead class="table-sena">
+                            <tr>
+                                <th scope="col">Ficha</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Clase</th>
+                                <th scope="col">NO</th>
+                                <th scope="col">NO CON EXCUSA</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpoDetalleAsistenciaUser" />
+                    </table>
+          </div>
+    </div>
+}
+
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+<script type="text/javascript" charset="utf-8">
+ 
+    let valor=$("#txtValorEstudiante").val();
+    console.log(valor);
+
+        let isInstructor = valor?valor:false;
+        var listaPresences = [];
+        console.log(isInstructor);
+        $(document).ready(function () {
+            if (isInstructor=="False") {
+                getAllPresencesUser();
+            }
+        });
+
+        function getAllPresencesUser() {
+            $.ajax({
+                url: '@Url.Action("GetPresenceDetailStudents_", "Home")',
+                method: 'GET',
+                dataType: "json",
+                success: function (data) {
+                    modalProcesando(false);
+                    if (data.isSuccess) {
+                        listaPresences = data.result;
+                        console.log(listaPresences);
+                        loadGridDetailStudents(listaPresences);
+                    } else {
+                        Swal.fire(
+                            'Opps!',
+                            data.message,
+                            'error');
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    modalProcesando(false);
+                    console.error(xhr, textStatus, errorThrown);
+                }
+            });
+        }
+        //** DETALLE ASISTENCIAS */
+        function loadGridDetailStudents(data) {
+            //llenar registro
+            if ($.fn.dataTable.isDataTable('#tblDetalleAsistenciaUser')) {
+                var table = $('#tblDetalleAsistenciaUser').DataTable();
+                table.destroy();
+                cargarGridDetailPresence(data);
+                llenarGridDataTable('tblDetalleAsistenciaUser');
+            } else {
+                cargarGridDetailPresence(data);
+                llenarGridDataTable('tblDetalleAsistenciaUser');
+            }
+        }
+
+        function cargarGridDetailPresence(data) {
+            $("#cuerpoDetalleAsistenciaUser").html("");
+
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].excuse) {
+                    var tr = `
+                                        <tr> 
+                                        <th>`+ data[i].ficha + `</th>
+                                        <th scope="col">`+ data[i].strDate + `</th>
+                                        <th>`+ data[i].strClass + `</th>
+                                        <th scope="col">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" disabled name="radioPresence`+ i + `" id="radioPresence` + i + `" >
+                                                <label class="form-check-label" for="radioPresence`+ i + `">
+                                                    Sin Excusa
+                                                </label>
+                                            </div>
+                                        </th>
+                                        <th scope="col">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" disabled checked name="radioPresence`+ i + `" id="radioPresence` + i + `">
+                                                <label class="form-check-label" for="radioPresence`+ i + `">
+                                                    Con Excusa
+                                                </label>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                    `;
+                    $("#cuerpoDetalleAsistenciaUser").append(tr);
+                } else {
+                    var tr = `
+                                <tr>
+                                         <th>`+ data[i].ficha + `</th>
+                                        <th scope="col">`+ data[i].strDate + `</th>
+                                        <th>`+ data[i].strClass + `</th>
+
+                                         <th scope="col">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" disabled checked name="radioPresence`+ i + `" id="radioPresence` + i + `" >
+                                                <label class="form-check-label" for="radioPresence`+ i + `">
+                                                    Sin Excusa
+                                                </label>
+                                            </div>
+                                        </th>
+                                        <th scope="col">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" disabled name="radioPresence`+ i + `" id="radioPresence` + i + `">
+                                                <label class="form-check-label" for="radioPresence`+ i + `">
+                                                    Con Excusa
+                                                </label>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                    `;
+                    $("#cuerpoDetalleAsistenciaUser").append(tr);
+                }
+            }
+        }
+</script>
+
+    }
