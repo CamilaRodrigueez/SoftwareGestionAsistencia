@@ -16,8 +16,8 @@
         {
             public const string ServidorGmail = "smtp.gmail.com";
             public const string GmailUser = "mipruebasoft123@gmail.com";
-            public const string GmailPassword = "bqycfusxfpwxydie";
-            public const int PuertoGmail = 25;
+            public const string GmailPassword = "qjijtneutqvwhkhh";
+            public const int PuertoGmail = 587;
 
         }
     }

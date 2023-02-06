@@ -183,8 +183,14 @@
                     <form>
                         <div class="row">
                             <div class="col-md-12 form-group">
-                                <label class="control-label"> Ficha </label>
-                                <select class="form-control" id="cmbAllFichas" onchange="selectAllFicha()" name="idFicha" required>
+                                <label class="col-form-label"> Ficha </label>
+                                <select 
+                                    class="form-control"
+                                    id="cmbAllFichas" 
+                                    onchange="selectAllFicha()" 
+                                    name="idFicha" 
+                                    style="width: 100%;"
+                                    required >
                                     <option> Selecciona una Ficha</option>
                                     @*<option data-toggle="tooltip" data-placement="top" title="Tooltip on top"> Seleccionar Ficha</option>*@
                                 </select>
@@ -228,11 +234,10 @@
     $(document).ready(function () {
         getAllUser(model.isInstructor);
         getAllFichas();
-
        
     });
 
-
+    
     function loadGrid(data) {
         //llenar registro
         if ($.fn.dataTable.isDataTable('#tblUser')) {
@@ -288,7 +293,7 @@
                 console.log(data);
                 if (data.isSuccess) {
                     listaFichas = data.result;
-                    loadAllFichas(listaFichas);
+                    //loadAllFichas(listaFichas);
                 } else {
                     Swal.fire(
                         'Opps!',
@@ -366,6 +371,7 @@
         $("#txtEmail").val('');
         $("#cmbFichas").val('');
         $("#cmbAllFichas").val('');
+        idAllFicha='';
         idFichas = '';
         idFicha = '';
         idUser = '';
@@ -397,6 +403,20 @@
     function nuevosUsuarios() {
 
         limpiarForm();
+        
+                var list = transformarDataSelect2Fichas(listaFichas);
+                $('#cmbAllFichas').select2({
+                    width: 'resolve',
+                    placeholder: 'Selecciona una Ficha',
+                    "element": 'onkeypress="return valideKey(event);"',
+                    dropdownParent: $('#modalUsersMasivo'),
+                    data: list,
+                    //tokenSeparators: [',', ' '],
+                    multiple: false
+                });
+
+                //Para que el multi select solo permita números
+                multiSelectLetras();
         const modalUSer = new bootstrap.Modal('#modalUsersMasivo', {
             keyboard: true
         });
@@ -404,19 +424,20 @@
     }
 
 
-    function loadAllFichas(data, selected) {
-        $("#cmbAllFichas").empty();
-        $("#cmbAllFichas").append('<option value="" disabled selected>Seleccione una Ficha</option>');
-        $.each(data, function (i, lista) {
-            if (data[i].idFicha == selected) {
-                $("#cmbAllFichas").append('<option style="cursor:pointer;"  data-toggle="tooltip" data-placement="top" title="' + data[i].name + '" value="' + data[i].idFicha + '"selected>' + data[i].numFicha + '</option>');
-            } else {
-                $("#cmbAllFichas").append('<option style="cursor:pointer;"  data-toggle="tooltip" data-placement="top" title="' + data[i].name + '" value="' + data[i].idFicha + '">' + data[i].numFicha + '</option>');
-            }
-        });
-    }
+    //function loadAllFichas(data, selected) {
+    //    $("#cmbAllFichas").empty();
+    //    $("#cmbAllFichas").append('<option value="" disabled selected>Seleccione una Ficha</option>');
+    //    $.each(data, function (i, lista) {
+    //        if (data[i].idFicha == selected) {
+    //            $("#cmbAllFichas").append('<option style="cursor:pointer;"  data-toggle="tooltip" data-placement="top" title="' + data[i].name + '" value="' + data[i].idFicha + '"selected>' + data[i].numFicha + '</option>');
+    //        } else {
+    //            $("#cmbAllFichas").append('<option style="cursor:pointer;"  data-toggle="tooltip" data-placement="top" title="' + data[i].name + '" value="' + data[i].idFicha + '">' + data[i].numFicha + '</option>');
+    //        }
+    //    });
+    //}
 
     function selectAllFicha() {
+
         var combo = document.getElementById("cmbAllFichas");
         let selected = combo.options[combo.selectedIndex].value;
         let text = combo.options[combo.selectedIndex].text;

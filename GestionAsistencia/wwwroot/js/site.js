@@ -109,3 +109,14 @@ function transformarDataSelect2FichasCompleta(transformarData) {
         return data;
     });
 }
+
+function transformardataselect2clases(transformarData) {
+    return transformarData.map(function (clase) {
+        let data = {
+            id: clase.idClass,
+            text: clase.class,
+           
+        };
+        return data;
+    });
+}

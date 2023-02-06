@@ -248,7 +248,43 @@
         llenarGridDataTable('tblDetalleAsistencia');
     });
 
+        function loadAllFichas(data) {
+            var list = transformarDataSelect2Fichas(data);
+            $('#cmbAllFichas').select2({
+                width: 'resolve',
+                placeholder: 'Selecciona una Ficha',
+                "element": 'onkeypress="return valideKey(event);"',
+                //dropdownParent: $('#modalUsersMasivo'),
+                data: list,
+                //tokenSeparators: [',', ' '],
+                multiple: false
+            });
+            //Para que el multi select solo permita números
+                multiSelectLetras();
+            //$("#cmbAllFichas").empty();
+            //$("#cmbAllFichas").append('<option value="" disabled selected>Seleccione una Ficha</option>');
+            //$.each(data, function (i, lista) {
+            //    if (data[i].idFicha == selected) {
+            //        $("#cmbAllFichas").append('<option style="cursor:pointer;"  data-toggle="tooltip" data-placement="top" title="' + data[i].name + '" value="' + data[i].idFicha + '"selected>' + data[i].numFicha + '</option>');
+            //    }else {
+            //        $("#cmbAllFichas").append('<option style="cursor:pointer;"  data-toggle="tooltip" data-placement="top" title="' + data[i].name + '" value="' + data[i].idFicha + '">' + data[i].numFicha + '</option>');
+            //    }
+            //});
+        }
 
+        function loadAllClass(data, selected) {
+            var list = transformardataselect2clases(data);
+
+            $("#cmbAllClass").empty();
+            $("#cmbAllClass").append('<option value="" disabled selected>Seleccionar Clase</option>');
+            $.each(data, function (i, lista) {
+                if (data[i].idClass == selected) {
+                    $("#cmbAllClass").append('<option  value="' + data[i].idClass + '"selected>' + data[i].class + '</option>');
+                } else {
+                    $("#cmbAllClass").append('<option value="' + data[i].idClass + '">' + data[i].class + '</option>');
+                }
+            });
+        }
     function obtenerAsistencias(){
           if(validarFormExcusas()){
              let parametro={
