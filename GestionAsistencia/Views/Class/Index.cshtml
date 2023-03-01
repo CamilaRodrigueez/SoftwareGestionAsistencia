@@ -57,7 +57,10 @@
                             <div class="row">
                                 <div class="col-md-12 form-group">
                                     <label for="recipient-name" class="col-form-label">Ficha</label>
-                                    <select class="form-control" id="cmbFichas" style="width: 100%;" onkeypress="return soloNumeros(event);"></select>
+                                    <select class="form-control" 
+                                    id="cmbFichas" 
+                                    style="width: 100%;" 
+                                    onkeypress="return soloNumeros(event);"></select>
                                 </div>
                             </div>
                             <div class="row">
@@ -211,7 +214,7 @@
                     multiple: true
                 });
 
-                //Para que el multi select solo permita letras
+                //Para que el multi select solo permita números
                 multiSelectLetras();
                 var myTooltipEl = document.getElementById('cmbFichas')
                 var tooltip = new bootstrap.Tooltip(myTooltipEl)

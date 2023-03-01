@@ -1,12 +1,7 @@
 ﻿<div class="row">
     <div class="col-md-6 form-group">
         <label class="control-label"> Ficha </label>
-        <select 
-        class="form-control" 
-        id="cmbAllFichas"
-        onchange="selectAllFicha()"
-        style="width: 100%;"
-        required>
+        <select class="form-control" id="cmbAllFichas" onchange="selectAllFicha()" required>
             <option> Selecciona una Ficha</option>
             @*<option data-toggle="tooltip" data-placement="top" title="Tooltip on top"> Seleccionar Ficha</option>*@
         </select>
@@ -22,10 +17,10 @@
 
 
 <script type="text/javascript" charset="utf-8">
-        var listAllClass = [];
-        var listAllFichas = [];
-        let idAllFicha = '';
-        let idAllClass = '';
+    var listAllClass = [];
+    var listAllFichas = [];
+    let idAllFicha = '';
+    let idAllClass = '';
 
     function getAllFichasClass() {
         modalProcesando(true, 'Cargando Fichas');
@@ -52,37 +47,57 @@
         });
     }
 
-    
+    function loadAllFichas(data, selected) {
+        $("#cmbAllFichas").empty();
+        $("#cmbAllFichas").append('<option value="" disabled selected>Seleccione una Ficha</option>');
+        $.each(data, function (i, lista) {
+            if (data[i].idFicha == selected) {
+                $("#cmbAllFichas").append('<option style="cursor:pointer;"  data-toggle="tooltip" data-placement="top" title="' + data[i].name + '" value="' + data[i].idFicha + '"selected>' + data[i].numFicha + '</option>');
+            } else {
+                $("#cmbAllFichas").append('<option style="cursor:pointer;"  data-toggle="tooltip" data-placement="top" title="' + data[i].name + '" value="' + data[i].idFicha + '">' + data[i].numFicha + '</option>');
+            }
+        });
+    }
 
-    function selectAllFicha(){
-        var combo=document.getElementById("cmbAllFichas");
+    function selectAllFicha() {
+        var combo = document.getElementById("cmbAllFichas");
         let selected = combo.options[combo.selectedIndex].value;
         //let text = combo.options[combo.selectedIndex].text;
-        idAllFicha=selected;
-        var selectAllClass=listAllFichas.find(x=>x.idFicha==idAllFicha);
-        listAllClass=selectAllClass.listClass;
+        idAllFicha = selected;
+        var selectAllClass = listAllFichas.find(x => x.idFicha == idAllFicha);
+        listAllClass = selectAllClass.listClass;
         loadAllClass(listAllClass);
     }
 
-  
-
-    function selectAllClass(){
-        var combo=document.getElementById("cmbAllClass");
-        let selected = combo.options[combo.selectedIndex].value;
-        //let text = combo.options[combo.selectedIndex].text;
-        idAllClass=selected;
+    function loadAllClass(data, selected) {
+        $("#cmbAllClass").empty();
+        $("#cmbAllClass").append('<option value="" disabled selected>Seleccionar Clase</option>');
+        $.each(data, function (i, lista) {
+            if (data[i].idClass == selected) {
+                $("#cmbAllClass").append('<option  value="' + data[i].idClass + '"selected>' + data[i].class + '</option>');
+            } else {
+                $("#cmbAllClass").append('<option value="' + data[i].idClass + '">' + data[i].class + '</option>');
+            }
+        });
     }
 
-    function validarTodaFichaClase(){
+    function selectAllClass() {
+        var combo = document.getElementById("cmbAllClass");
+        let selected = combo.options[combo.selectedIndex].value;
+        //let text = combo.options[combo.selectedIndex].text;
+        idAllClass = selected;
+    }
+
+    function validarTodaFichaClase() {
         var combo = document.getElementById("cmbAllFichas");
-        if (combo.selectedIndex == 0){
+        if (combo.selectedIndex == 0) {
             $("#cmbAllFichas").focus();
             toastMessage('warning', 'La ficha es obligatoria para realizar la busqueda.');
             return false;
         }
 
         var comboClass = document.getElementById("cmbAllClass");
-        if (comboClass.selectedIndex == 0){
+        if (comboClass.selectedIndex == 0) {
             $("#cmbAllClass").focus();
             toastMessage('warning', 'La Clase es obligatoria para realizar la busqueda.');
             return false;
@@ -91,7 +106,7 @@
         return true;
     }
 
-    function limpiarFormTodaFichaClase(){
+    function limpiarFormTodaFichaClase() {
         idAllFicha = '';
         idAllClass = '';
 

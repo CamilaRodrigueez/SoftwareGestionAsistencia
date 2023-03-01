@@ -103,19 +103,8 @@ function transformarDataSelect2FichasCompleta(transformarData) {
     return transformarData.map(function (ficha) {
         let data = {
             id: ficha.idFicha,
-            text: ficha.numFicha + ' (' + ficha.name+ ' )',
+            text: ficha.numFicha + ' (' + ficha.name + ' )',
             "element": 'data-toggle="tooltip" data-placement="top" title="Prueba"'
-        };
-        return data;
-    });
-}
-
-function transformardataselect2clases(transformarData) {
-    return transformarData.map(function (clase) {
-        let data = {
-            id: clase.idClass,
-            text: clase.class,
-           
         };
         return data;
     });
